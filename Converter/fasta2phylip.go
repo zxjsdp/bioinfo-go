@@ -10,6 +10,8 @@ import (
 	"unicode"
 )
 
+const freeSpaceNum int = 4
+
 var (
 	print = fmt.Println
 	fileInfo *os.FileInfo
@@ -62,13 +64,17 @@ func generatePhylip(species []Species) {
 		return
 	}
 	var phylipLines []string
+	longestNameLength := getLongestNameLength(species)
 	speciesNum := len(species)
 	charNum := len(species[0].sequence)
+
 	// Add (speciesNum  charNum) to top line of output Phylip file
 	phylipLines = append(phylipLines, fmt.Sprintf("%d  %d", speciesNum, charNum))
 
+	// Add (species  sequence) to each line
 	for _, each := range species {
-		phylipLines = append(phylipLines, each.name + "\t\t" + each.sequence)
+		spacesForCurrentSpecies := generateSpacesForAlignment(longestNameLength, len(each.name))
+		phylipLines = append(phylipLines, each.name + spacesForCurrentSpecies + each.sequence)
 	}
 	phylipContent := strings.Join(phylipLines, "\n")
 
@@ -96,6 +102,22 @@ func checkFileExists(fileName string) {
 		}
 	}
 	// log.Println(fileInfo)
+}
+
+func getLongestNameLength(species []Species) int {
+	longestNameLength := 0
+	for _, each := range species {
+		if len(each.name) > longestNameLength {
+			longestNameLength = len(each.name)
+		}
+	}
+	return longestNameLength
+}
+
+func generateSpacesForAlignment(longestNameLength, currentNameLen int) string {
+	print(longestNameLength, currentNameLen)
+	spaceNum := longestNameLength - currentNameLen + freeSpaceNum
+	return strings.Repeat(" ", spaceNum)
 }
 
 func main() {
