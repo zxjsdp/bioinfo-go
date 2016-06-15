@@ -58,7 +58,7 @@ func extractSpecies(fastaFile string) []Species {
 	return species
 }
 
-func generatePhylip(species []Species) {
+func generatePhylip(species []Species, outputFile string) {
 	if species == nil {
 		log.Panic("No species!")
 		return
@@ -78,7 +78,7 @@ func generatePhylip(species []Species) {
 	}
 	phylipContent := strings.Join(phylipLines, "\n")
 
-	err := ioutil.WriteFile("out.phy", []byte(phylipContent), 0644)
+	err := ioutil.WriteFile(outputFile, []byte(phylipContent), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -101,7 +101,6 @@ func checkFileExists(fileName string) {
 			log.Fatal("File does not exist")
 		}
 	}
-	// log.Println(fileInfo)
 }
 
 func getLongestNameLength(species []Species) int {
@@ -115,16 +114,16 @@ func getLongestNameLength(species []Species) int {
 }
 
 func generateSpacesForAlignment(longestNameLength, currentNameLen int) string {
-	print(longestNameLength, currentNameLen)
 	spaceNum := longestNameLength - currentNameLen + freeSpaceNum
 	return strings.Repeat(" ", spaceNum)
 }
 
 func main() {
 	args := os.Args[1:]
-	if len(args) != 1 {
-		log.Fatal("Usage: ./FastaToPhylip-Go file.fasta")
+	if len(args) != 2 {
+		log.Fatal("Usage: ./FastaToPhylip-Go input.fasta output.phy")
 	}
 	checkFileExists(args[0])
-	generatePhylip(extractSpecies(args[0]))
+	fmt.Printf("Convert FASTA to Phylip:\n  %s => %s\n", args[0], args[1])
+	generatePhylip(extractSpecies(args[0]), args[1])
 }
