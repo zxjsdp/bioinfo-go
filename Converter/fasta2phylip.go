@@ -22,7 +22,7 @@ type Species struct {
 	name, sequence string
 }
 
-func extractSpecies(fastaFile string) []Species {
+func extractSpeciesFromFastaFile(fastaFile string) []Species {
 	var species []Species
 	var title, sequence, line string
 	file, err := os.Open(fastaFile)
@@ -94,7 +94,7 @@ func replaceBlankChars(str string) string {
 	}, str)
 }
 
-func checkFileExists(fileName string) {
+func checkFastaFileExists(fileName string) {
 	_, err := os.Stat(fileName)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -121,9 +121,9 @@ func generateSpacesForAlignment(longestNameLength, currentNameLen int) string {
 func main() {
 	args := os.Args[1:]
 	if len(args) != 2 {
-		log.Fatal("Usage: ./FastaToPhylip-Go input.fasta output.phy")
+		log.Fatal("Usage: /path/to/fasta2phylip input.fasta output.phy")
 	}
-	checkFileExists(args[0])
+	checkFastaFileExists(args[0])
 	fmt.Printf("Convert FASTA to Phylip:\n  %s => %s\n", args[0], args[1])
-	generatePhylip(extractSpecies(args[0]), args[1])
+	generatePhylip(extractSpeciesFromFastaFile(args[0]), args[1])
 }
