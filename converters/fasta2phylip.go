@@ -1,4 +1,4 @@
-package main
+package converters
 
 import (
 	"fmt"
@@ -8,21 +8,18 @@ import (
 	"strings"
 	"io/ioutil"
 	"unicode"
+
+	"github.com/zxjsdp/Bioinfo-Go/utils"
 )
 
 const freeSpaceNum int = 4
 
 var (
-	print = fmt.Println
 	fileInfo *os.FileInfo
 	err      error
 )
 
-type Species struct {
-	name, sequence string
-}
-
-func extractSpeciesFromFastaFile(fastaFile string) []Species {
+func ExtractSpeciesFromFastaFile(fastaFile string) []Species {
 	var species []Species
 	var title, sequence, line string
 	file, err := os.Open(fastaFile)
@@ -58,7 +55,7 @@ func extractSpeciesFromFastaFile(fastaFile string) []Species {
 	return species
 }
 
-func generatePhylip(species []Species, outputFile string) {
+func GeneratePhylip(species []Species, outputFile string) {
 	if species == nil {
 		log.Panic("No species!")
 		return
@@ -94,15 +91,6 @@ func replaceBlankChars(str string) string {
 	}, str)
 }
 
-func checkFastaFileExists(fileName string) {
-	_, err := os.Stat(fileName)
-	if err != nil {
-		if os.IsNotExist(err) {
-			log.Fatal("File does not exist")
-		}
-	}
-}
-
 func getLongestNameLength(species []Species) int {
 	longestNameLength := 0
 	for _, each := range species {
@@ -115,15 +103,6 @@ func getLongestNameLength(species []Species) int {
 
 func generateSpacesForAlignment(longestNameLength, currentNameLen int) string {
 	spaceNum := longestNameLength - currentNameLen + freeSpaceNum
-	return strings.Repeat(" ", spaceNum)
+	return utils.GenerateSpaces(spaceNum)
 }
 
-func main() {
-	args := os.Args[1:]
-	if len(args) != 2 {
-		log.Fatal("Usage: /path/to/fasta2phylip input.fasta output.phy")
-	}
-	checkFastaFileExists(args[0])
-	fmt.Printf("Convert FASTA to Phylip:\n  %s => %s\n", args[0], args[1])
-	generatePhylip(extractSpeciesFromFastaFile(args[0]), args[1])
-}

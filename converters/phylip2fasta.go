@@ -1,24 +1,17 @@
-package main
+package converters
 
 import (
 	"fmt"
 	"os"
 	"log"
 	"bufio"
-	"strconv"
 	"strings"
 	"io/ioutil"
+
+	"github.com/zxjsdp/Bioinfo-Go/utils"
 )
 
-var (
-	print = fmt.Println
-)
-
-type Species struct {
-	name, sequence string
-}
-
-func extractSpeciesFromPhylipFile(phylipFile string) []Species {
+func ExtractSpeciesFromPhylipFile(phylipFile string) []Species {
 	var species []Species
 	var line string
 	file, err := os.Open(phylipFile)
@@ -37,7 +30,7 @@ func extractSpeciesFromPhylipFile(phylipFile string) []Species {
 			if len(elements) != 2 {
 				log.Fatal("Invalid Phylip file!")
 			}
-			if !isStringIntType(elements[1]) {
+			if !utils.IsStringIntType(elements[1]) {
 				species = append(species, Species{elements[0], elements[1]})
 			}
 		}
@@ -49,7 +42,7 @@ func extractSpeciesFromPhylipFile(phylipFile string) []Species {
 	return species;
 }
 
-func generateFasta(species []Species, outputFile string) {
+func GenerateFasta(species []Species, outputFile string) {
 	if species == nil {
 		log.Panic("No species!")
 		return
@@ -67,28 +60,5 @@ func generateFasta(species []Species, outputFile string) {
 	}
 }
 
-func isStringIntType(stringToCheck string) bool {
-	if _, err := strconv.Atoi(stringToCheck); err == nil {
-		return true;
-	}
-	return false;
-}
 
-func checkPhylipFileExists(fileName string) {
-	_, err := os.Stat(fileName)
-	if err != nil {
-		if os.IsNotExist(err) {
-			log.Fatal("File does not exist")
-		}
-	}
-}
 
-func main() {
-	args := os.Args[1:]
-	if len(args) != 2 {
-		log.Fatal("Usage: /path/to/phylip2fasta input.phy output.fasta")
-	}
-	checkPhylipFileExists(args[0])
-	fmt.Printf("Convert Phylip to Fasta:\n  %s => %s\n", args[0], args[1])
-	generateFasta(extractSpeciesFromPhylipFile(args[0]), args[1])
-}
