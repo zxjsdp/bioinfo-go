@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"unicode"
 
-	"github.com/zxjsdp/Bioinfo-Go/utils"
+	"github.com/zxjsdp/bioinfo-go/utils"
 )
 
 const freeSpaceNum int = 4

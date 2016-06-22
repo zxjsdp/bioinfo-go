@@ -5,8 +5,8 @@ import (
 	"log"
 	"fmt"
 
-	"github.com/zxjsdp/Bioinfo-Go/converters"
-	"github.com/zxjsdp/Bioinfo-Go/utils"
+	"github.com/zxjsdp/bioinfo-go/converters"
+	"github.com/zxjsdp/bioinfo-go/utils"
 )
 
 func main() {

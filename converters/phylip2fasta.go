@@ -8,7 +8,7 @@ import (
 	"strings"
 	"io/ioutil"
 
-	"github.com/zxjsdp/Bioinfo-Go/utils"
+	"github.com/zxjsdp/bioinfo-go/utils"
 )
 
 func ExtractSpeciesFromPhylipFile(phylipFile string) []Species {
