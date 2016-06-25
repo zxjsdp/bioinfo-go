@@ -6,7 +6,15 @@ Bioinformatics tools written with Golang.
 Usage
 -----
 
-Most of the tools are standalone go files. You can quickly run them with `go run tool.go`, or compile them to executables with `go build tool.go`, then execute the executable: `/path/to/tool`.
+Do the following commands, then the executables will be in your `$GOPATH/bin/` folder.
+
+- fasta2phylip
+
+        go get github.com/zxjsdp/bioinfo-go/commands/fasta2phylip
+
+- phylip2fasta
+
+        go get github.com/zxjsdp/bioinfo-go/commands/phylip2fasta
 
 Tools list
 ----------
